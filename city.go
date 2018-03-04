@@ -65,7 +65,7 @@ func (db *City) Find(s string) ([]string, error) {
 		var start uint32
 		if mid > 0 {
 			pos1 := (mid - 1) * 9
-			start = binary.BigEndian.Uint32(db.index[pos1 : pos1+4])
+			start = binary.BigEndian.Uint32(db.index[pos1:pos1+4]) + 1
 		} else {
 			start = 0
 		}
