@@ -60,7 +60,7 @@ func (db *District) Find(s string) ([]string, error) {
 	}
 
 	low := 0
-	high := int(len(db.index) / 13)
+	high := int(len(db.index)/13) - 1
 	mid := 0
 
 	val := binary.BigEndian.Uint32(ipv.To4())

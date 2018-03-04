@@ -54,7 +54,7 @@ func (db *City) Find(s string) ([]string, error) {
 
 	low := 0
 	mid := 0
-	high := int(len(db.index) / 9)
+	high := int(len(db.index)/9) - 1
 
 	val := binary.BigEndian.Uint32(ipv.To4())
 
