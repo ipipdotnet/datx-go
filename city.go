@@ -74,7 +74,7 @@ func (db *City) Find(s string) ([]string, error) {
 
 		if val < start {
 			high = mid - 1
-		} else if val < end {
+		} else if val > end {
 			low = mid + 1
 		} else {
 			off := int(binary.LittleEndian.Uint32([]byte{
