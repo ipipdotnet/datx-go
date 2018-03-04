@@ -60,7 +60,7 @@ func (db *BaseStation) Find(s string) ([]string, error) {
 	}
 
 	low := 0
-	high := int(len(db.index) / 13)
+	high := int(len(db.index)/13) - 1
 	mid := 0
 
 	val := binary.BigEndian.Uint32(ipv.To4())
@@ -68,7 +68,7 @@ func (db *BaseStation) Find(s string) ([]string, error) {
 	for low <= high {
 		mid = int((low + high) / 2)
 		pos := mid * 13
-
+		fmt.Printf("mid[%d].low[%d].high[%d]\n", mid, low, high)
 		start := binary.BigEndian.Uint32(db.index[pos : pos+4])
 		end := binary.BigEndian.Uint32(db.index[pos+4 : pos+8])
 
