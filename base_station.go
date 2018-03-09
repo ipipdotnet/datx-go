@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// NewBaseStation ...
 func NewBaseStation(fn string) (*BaseStation, error) {
 
 	db := &BaseStation{}
@@ -20,6 +21,7 @@ func NewBaseStation(fn string) (*BaseStation, error) {
 	return db, nil
 }
 
+// BaseStation ...
 type BaseStation struct {
 	file *os.File
 
@@ -35,23 +37,29 @@ func (db *BaseStation) load(fn string) error {
 	}
 
 	b4 := make([]byte, 4)
-
-	db.file.Read(b4)
-
+	_, err = db.file.Read(b4)
+	if err != nil {
+		return err
+	}
 	off := int(binary.BigEndian.Uint32(b4))
-	db.file.Seek(262148, 0)
-
+	_, err = db.file.Seek(262148, 0)
+	if err != nil {
+		return err
+	}
 	db.index = make([]byte, off-262148-262144)
-	db.file.Read(db.index)
-
+	_, err = db.file.Read(db.index)
+	if err != nil {
+		return err
+	}
 	db.data, err = ioutil.ReadAll(db.file)
 	if err != nil {
 		return err
 	}
-	//	fmt.Println(len(db.data))
+
 	return nil
 }
 
+// Find ...
 func (db *BaseStation) Find(s string) ([]string, error) {
 
 	ipv := net.ParseIP(s)

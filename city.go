@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// NewCity ...
 func NewCity(name string) (*City, error) {
 	db := &City{}
 
@@ -19,6 +20,7 @@ func NewCity(name string) (*City, error) {
 	return db, nil
 }
 
+// City ...
 type City struct {
 	file  *os.File
 	index []byte
@@ -32,12 +34,21 @@ func (db *City) load(fn string) error {
 		return err
 	}
 	b4 := make([]byte, 4)
-	db.file.Read(b4)
+	_, err = db.file.Read(b4)
+	if err != nil {
+		return err
+	}
 	off := int(binary.BigEndian.Uint32(b4))
 
-	db.file.Seek(262148, 0)
+	_, err = db.file.Seek(262148, 0)
+	if err != nil {
+		return err
+	}
 	db.index = make([]byte, off-262148-262144)
-	db.file.Read(db.index)
+	_, err = db.file.Read(db.index)
+	if err != nil {
+		return err
+	}
 
 	db.data, err = ioutil.ReadAll(db.file)
 	if err != nil {
@@ -46,6 +57,7 @@ func (db *City) load(fn string) error {
 	return nil
 }
 
+// Find ...
 func (db *City) Find(s string) ([]string, error) {
 	ipv := net.ParseIP(s)
 	if ipv == nil {

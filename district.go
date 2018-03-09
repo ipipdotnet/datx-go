@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// NewDistrict ...
 func NewDistrict(fn string) (*District, error) {
 
 	db := &District{}
@@ -20,6 +21,7 @@ func NewDistrict(fn string) (*District, error) {
 	return db, nil
 }
 
+// District ...
 type District struct {
 	file *os.File
 
@@ -35,15 +37,21 @@ func (db *District) load(fn string) error {
 	}
 
 	b4 := make([]byte, 4)
-
-	db.file.Read(b4)
+	_, err = db.file.Read(b4)
+	if err != nil {
+		return err
+	}
 
 	off := int(binary.BigEndian.Uint32(b4))
-	db.file.Seek(262148, 0)
-
+	_, err = db.file.Seek(262148, 0)
+	if err != nil {
+		return err
+	}
 	db.index = make([]byte, off-262148-262144)
-	db.file.Read(db.index)
-
+	_, err = db.file.Read(db.index)
+	if err != nil {
+		return err
+	}
 	db.data, err = ioutil.ReadAll(db.file)
 	if err != nil {
 		return err
@@ -52,6 +60,7 @@ func (db *District) load(fn string) error {
 	return nil
 }
 
+// Find ...
 func (db *District) Find(s string) ([]string, error) {
 
 	ipv := net.ParseIP(s)
