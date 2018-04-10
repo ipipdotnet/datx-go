@@ -44,7 +44,8 @@ func (db *City) load(fn string) error {
 	if err != nil {
 		return err
 	}
-	db.index = make([]byte, off-262148-262144)
+             l := off-262148-262144
+	db.index = make([]byte, l)
 	_, err = db.file.Read(db.index)
 	if err != nil {
 		return err
