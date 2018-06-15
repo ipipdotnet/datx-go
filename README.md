@@ -1,10 +1,10 @@
 # datx-go
 IPIP.net官方支持datx格式的解析代码
 
-## 安装
+## 安装 Installation
 <pre><code>go get github.com/ipipdotnet/datx-go</code></pre>
 
-## 示例
+## 示例 Usage
 <pre>
 <code>
 package main
