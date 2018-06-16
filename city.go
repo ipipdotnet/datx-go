@@ -2,12 +2,15 @@ package datx
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io/ioutil"
 	"net"
 	"os"
 	"strings"
+	"errors"
 )
+
+var ErrIPv4Format = errors.New("ipv4 format error")
+var ErrNotFound = errors.New("not found")
 
 // NewCity ...
 func NewCity(name string) (*City, error) {
@@ -44,7 +47,8 @@ func (db *City) load(fn string) error {
 	if err != nil {
 		return err
 	}
-             l := off-262148-262144
+
+	l := off-262148-262144
 	db.index = make([]byte, l)
 	_, err = db.file.Read(db.index)
 	if err != nil {
@@ -61,8 +65,8 @@ func (db *City) load(fn string) error {
 // Find ...
 func (db *City) Find(s string) ([]string, error) {
 	ipv := net.ParseIP(s)
-	if ipv == nil {
-		return nil, fmt.Errorf("%s", "ip format error.")
+	if ipv == nil || ipv.To4() == nil {
+		return nil, ErrIPv4Format
 	}
 
 	low := 0
@@ -102,5 +106,58 @@ func (db *City) Find(s string) ([]string, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("%s", "not found")
+	return nil, ErrNotFound
+}
+
+func (db *City) FindLocation(s string) (Location, error) {
+	var loc Location
+
+	a, e := db.Find(s)
+	if e != nil {
+		return loc, e
+	}
+
+	loc.Country = a[0]
+	loc.Province = a[1]
+	loc.City = a[2]
+	loc.Organization = a[3]
+	loc.ISP = a[4]
+	loc.Latitude = a[5]
+	loc.Longitude = a[6]
+	loc.TimeZone = a[7]
+	loc.TimeZone2 = a[8]
+	loc.CityCode = a[9]
+	loc.PhonePrefix = a[10]
+	loc.CountryCode = a[11]
+	loc.ContinentCode = a[12]
+
+	if len(a) == 15 {
+		loc.IDC = a[13]
+		loc.BaseStation = a[14]
+	} else if len(a) == 16 {
+		if a[15] == "ANYCAST" {
+			loc.Anycast = true
+		}
+	}
+
+	return loc, nil
+}
+
+type Location struct{
+	Country string
+	Province string
+	City string
+	Organization string
+	ISP string
+	Latitude string
+	Longitude string
+	TimeZone string
+	TimeZone2 string
+	CityCode string
+	PhonePrefix string
+	CountryCode string
+	ContinentCode string
+	IDC string // IDC | VPN
+	BaseStation string // WIFI | BS (Base Station)
+	Anycast bool
 }
