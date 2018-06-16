@@ -1,6 +1,7 @@
 package datx
 
 import (
+	"encoding/json"
 	"encoding/binary"
 	"io/ioutil"
 	"net"
@@ -120,6 +121,10 @@ func (db *City) FindLocation(s string) (Location, error) {
 	loc.Country = a[0]
 	loc.Province = a[1]
 	loc.City = a[2]
+	if len(a) < 10 {
+		return loc, nil
+	}
+
 	loc.Organization = a[3]
 	loc.ISP = a[4]
 	loc.Latitude = a[5]
@@ -160,4 +165,13 @@ type Location struct{
 	IDC string // IDC | VPN
 	BaseStation string // WIFI | BS (Base Station)
 	Anycast bool
+}
+
+func (l Location) ToJSON() []byte {
+	all, err := json.Marshal(l)
+	if err == nil {
+		return all
+	}
+
+	return nil
 }
