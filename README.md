@@ -14,18 +14,22 @@ import "fmt"
 
 func main(){
 
-    city, err := datx.NewCity("/path/to/17monipdb.datx")
+    city, err := datx.NewCity("/path/to/17monipdb.datx") // For City Level IP Database
     if err == nil {
         fmt.Println(city.Find("8.8.8.8"))
         fmt.Println(city.Find("128.8.8.8"))
         fmt.Println(city.Find("255.255.255.255"))
+        loc, err := city.FindLocation("27.190.252.103")
+        if err == nil {
+            fmt.Println(loc, "\n", string(loc.ToJSON()))
+        }
     }
-    dis, err := datx.NewDistrict("/path/to/quxian.datx")
+    dis, err := datx.NewDistrict("/path/to/quxian.datx") // Only China District IP Database
     if err == nil {
         fmt.Println(dis.Find("1.12.46.0"))
         fmt.Println(dis.Find("223.255.127.0"))
     }
-    bst, err := datx.NewBaseStation("/path/to/station_ip.datx")
+    bst, err := datx.NewBaseStation("/path/to/station_ip.datx") // Only China Base Station IP Database
     if err == nil {
         fmt.Println(bst.Find("1.30.6.0"))
         fmt.Println(bst.Find("223.221.121.0"))
