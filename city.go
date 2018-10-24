@@ -121,12 +121,18 @@ func (db *City) FindLocation(s string) (Location, error) {
 	loc.Country = a[0]
 	loc.Province = a[1]
 	loc.City = a[2]
-	if len(a) < 10 {
+	if len(a) < 5 { // free version
 		return loc, nil
 	}
 
 	loc.Organization = a[3]
 	loc.ISP = a[4]
+
+	if len(a) == 5 { // weekly
+		return loc, nil
+	}
+
+	// advanced
 	loc.Latitude = a[5]
 	loc.Longitude = a[6]
 	loc.TimeZone = a[7]
@@ -136,7 +142,7 @@ func (db *City) FindLocation(s string) (Location, error) {
 	loc.CountryCode = a[11]
 	loc.ContinentCode = a[12]
 
-	if len(a) == 17 {
+	if len(a) == 17 { // profession 
 		loc.IDC = a[13]
 		loc.BaseStation = a[14]
 		loc.CountryCode3 = a[15]
@@ -145,7 +151,7 @@ func (db *City) FindLocation(s string) (Location, error) {
 		} else {
 			loc.EuropeanUnion = false
 		}
-	} else if len(a) == 20 {
+	} else if len(a) == 20 { // enterprise
 		loc.IDC = a[13]
 		loc.BaseStation = a[14]
 		loc.CountryCode3 = a[15]
