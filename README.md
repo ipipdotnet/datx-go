@@ -1,4 +1,12 @@
-# datx-go
+# 重要提示
+<font face="微软雅黑" color="red" size="3">datx格式将全面升级为ipdb格式</font> [IPDB格式解析代码](https://github.com/ipipdotnet/ipdb-php)
+
+## ipdb 格式优点
+ * 可同时支持IPv4与IPv6
+ * 可同时支持中文与英文
+ * 查询性能大幅度提高
+
+## datx-go
 IPIP.net官方支持datx格式的解析代码
 
 ## 安装 Installation
