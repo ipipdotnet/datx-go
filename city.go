@@ -37,6 +37,10 @@ func (db *City) load(fn string) error {
 	if err != nil {
 		return err
 	}
+	defer func() {
+		db.file.Close()
+		db.file = nil
+	}()
 	b4 := make([]byte, 4)
 	_, err = db.file.Read(b4)
 	if err != nil {
